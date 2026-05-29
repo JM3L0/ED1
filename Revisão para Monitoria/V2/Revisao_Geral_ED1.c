@@ -12,6 +12,7 @@ LSE* inserir_no_inicio(LSE* lista, LSE* novo);
 LSE* inserir_final(LSE* lista, LSE* novo);
 LSE* inserir_posicao(LSE* lista, LSE* novo, int posicao);
 LSE* inserir_recursivo(LSE* lista, LSE* novo, int posicao);
+void inserir_ordenado_recursivo(LSE** lista, LSE* novo);
 void consultar_posicao(LSE* lista, int posicao);
 LSE* remover_elemento(LSE* lista, int elemento);
 void printar_lista(LSE* lista);
@@ -88,13 +89,25 @@ int main(){
             break;
         }
         case 5:{
+            int numero;
+            printf("Digite um valor: ");
+            scanf("%d", &numero);
+            LSE* novo = novo_no();
+            if(novo){
+                novo->valor = numero;
+                inserir_ordenado_recursivo(&lista, novo);
+                printf("Inserido em ordem (recursivo)!\n\n");
+            }
+            break;
+        }
+        case 6:{
             int posicao;
             printf("Digite a posicao a consultar: ");
             scanf("%d", &posicao);
             consultar_posicao(lista, posicao);
             break;
         }
-        case 6:{
+        case 7:{
             int elemento;
             printf("Digite o valor a remover: ");
             scanf("%d", &elemento);
@@ -102,16 +115,16 @@ int main(){
             printf("Elemento removido!\n\n");
             break;
         }
-        case 7:
+        case 8:
             printf("Lista (iterativa):\n");
             printar_lista(lista);
             break;
-        case 8:
+        case 9:
             printf("Lista (recursiva):\n");
             printar_lista_recursiva(lista);
             printf("NULL\n\n");
             break;
-        case 9:{
+        case 10:{
             if(lista != NULL){
                 int soma = soma_lista_recursiva(lista);
                 printf("Soma dos elementos (recursiva): %d\n\n", soma);
@@ -120,21 +133,21 @@ int main(){
             }
             break;
         }
-        case 10:{
+        case 11:{
             int n;
             printf("Digite um numero para calcular o fatorial: ");
             scanf("%d", &n);
             printf("Fatorial de %d = %d\n\n", n, fat_recursivo(n));
             break;
         }
-        case 11:{
+        case 12:{
             int n;
             printf("Digite um numero para calcular fibonacci: ");
             scanf("%d", &n);
             printf("Fibonacci de %d = %d\n\n", n, fibonacci_recursivo(n));
             break;
         }
-        case 12:
+        case 13:
             lista = libera_lista(lista);
             break;
         default:
@@ -152,16 +165,17 @@ void menu(){
     printf("2-> Inserir no final\n");
     printf("3-> Inserir em posicao especifica (iterativo)\n");
     printf("4-> Inserir em posicao especifica (recursivo)\n");
-    printf("5-> Consultar posicao especifica\n");
-    printf("6-> Remover elemento\n");
-    printf("7-> Listar (iterativa)\n");
-    printf("8-> Listar (recursiva)\n");
+    printf("5-> Inserir em ordem (recursivo)\n");
+    printf("6-> Consultar posicao especifica\n");
+    printf("7-> Remover elemento\n");
+    printf("8-> Listar (iterativa)\n");
+    printf("9-> Listar (recursiva)\n");
     printf("--- RECURSIVIDADE ---\n");
-    printf("9-> Soma lista recursiva\n");
-    printf("10-> Fatorial recursivo\n");
-    printf("11-> Fibonacci recursivo\n");
+    printf("10-> Soma lista recursiva\n");
+    printf("11-> Fatorial recursivo\n");
+    printf("12-> Fibonacci recursivo\n");
     printf("--- GERAL ---\n");
-    printf("12-> Liberar lista\n");
+    printf("13-> Liberar lista\n");
     printf("0-> Sair\n\n");
 }
 
@@ -247,6 +261,20 @@ LSE* inserir_recursivo(LSE* lista, LSE* novo, int posicao){
     }
 
     return result;
+}
+
+void inserir_ordenado_recursivo(LSE** lista, LSE* novo){
+
+    if (*lista == NULL){
+        *lista = novo;
+    }else{
+        if (novo->valor < (*lista)->valor){
+            novo->proximo = *lista;
+            *lista = novo;
+        }else{
+            inserir_ordenado_recursivo(&(*lista)->proximo, novo);
+        }
+    }
 }
 
 void consultar_posicao(LSE* lista, int posicao){
