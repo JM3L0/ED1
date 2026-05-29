@@ -20,8 +20,6 @@ void printar_lista_recursiva(LSE* lista);
 LSE* libera_lista(LSE* lista);
 
 ///////// FUNÇÕES - RECURSIVIDADE ////////////
-int fat_recursivo(int n);
-int fibonacci_recursivo(int n);
 int soma_lista_recursiva(LSE* lista);
 
 void menu();
@@ -29,6 +27,9 @@ void menu();
 int main(){
     LSE* lista = NULL;
     while(1){
+
+        printar_lista(lista);
+        
         menu();
 
         int opcao;
@@ -133,21 +134,7 @@ int main(){
             }
             break;
         }
-        case 11:{
-            int n;
-            printf("Digite um numero para calcular o fatorial: ");
-            scanf("%d", &n);
-            printf("Fatorial de %d = %d\n\n", n, fat_recursivo(n));
-            break;
-        }
-        case 12:{
-            int n;
-            printf("Digite um numero para calcular fibonacci: ");
-            scanf("%d", &n);
-            printf("Fibonacci de %d = %d\n\n", n, fibonacci_recursivo(n));
-            break;
-        }
-        case 13:
+        case 11:
             lista = libera_lista(lista);
             break;
         default:
@@ -172,10 +159,8 @@ void menu(){
     printf("9-> Listar (recursiva)\n");
     printf("--- RECURSIVIDADE ---\n");
     printf("10-> Soma lista recursiva\n");
-    printf("11-> Fatorial recursivo\n");
-    printf("12-> Fibonacci recursivo\n");
     printf("--- GERAL ---\n");
-    printf("13-> Liberar lista\n");
+    printf("11-> Liberar lista\n");
     printf("0-> Sair\n\n");
 }
 
@@ -348,30 +333,6 @@ LSE* libera_lista(LSE* lista){
 }
 
 /////////////////////////////FUNÇÕES RECURSIVIDADE/////////////////////////////
-
-int fat_recursivo(int n){
-    int resultado;
-
-    if(n <= 1){
-        resultado = 1;
-    }else{
-        resultado = n * fat_recursivo(n - 1);
-    }
-
-    return resultado;
-}
-
-int fibonacci_recursivo(int n){
-    int resultado;
-
-    if(n <= 1){
-        resultado = n;
-    }else{
-        resultado = fibonacci_recursivo(n - 1) + fibonacci_recursivo(n - 2);
-    }
-
-    return resultado;
-}
 
 int soma_lista_recursiva(LSE* lista){
     int resultado;
