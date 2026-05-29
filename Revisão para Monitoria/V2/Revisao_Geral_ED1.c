@@ -8,10 +8,10 @@ typedef struct LSE{
 
 ///////// FUNÇÕES - LISTA ENCADEADA ////////////
 LSE* novo_no();
-LSE* inserir_no_inicio(LSE* lista, int valor);
-LSE* inserir_final(LSE* lista, int valor);
-LSE* inserir_posicao(LSE* lista, int valor, int posicao);
-LSE* inserir_recursivo(LSE* lista, int valor, int posicao);
+LSE* inserir_no_inicio(LSE* lista, LSE* novo);
+LSE* inserir_final(LSE* lista, LSE* novo);
+LSE* inserir_posicao(LSE* lista, LSE* novo, int posicao);
+LSE* inserir_recursivo(LSE* lista, LSE* novo, int posicao);
 void consultar_posicao(LSE* lista, int posicao);
 LSE* remover_elemento(LSE* lista, int elemento);
 void printar_lista(LSE* lista);
@@ -39,16 +39,24 @@ int main(){
             int numero;
             printf("Digite um valor: ");
             scanf("%d", &numero);
-            lista = inserir_no_inicio(lista, numero);
-            printf("Inserido no inicio!\n\n");
+            LSE* novo = novo_no();
+            if(novo){
+                novo->valor = numero;
+                lista = inserir_no_inicio(lista, novo);
+                printf("Inserido no inicio!\n\n");
+            }
             break;
         }
         case 2:{
             int numero;
             printf("Digite um valor: ");
             scanf("%d", &numero);
-            lista = inserir_final(lista, numero);
-            printf("Inserido no final!\n\n");
+            LSE* novo = novo_no();
+            if(novo){
+                novo->valor = numero;
+                lista = inserir_final(lista, novo);
+                printf("Inserido no final!\n\n");
+            }
             break;
         }
         case 3:{
@@ -57,8 +65,12 @@ int main(){
             scanf("%d", &numero);
             printf("Digite a posicao (0 para inicio): ");
             scanf("%d", &posicao);
-            lista = inserir_posicao(lista, numero, posicao);
-            printf("Inserido na posicao!\n\n");
+            LSE* novo = novo_no();
+            if(novo){
+                novo->valor = numero;
+                lista = inserir_posicao(lista, novo, posicao);
+                printf("Inserido na posicao!\n\n");
+            }
             break;
         }
         case 4:{
@@ -67,8 +79,12 @@ int main(){
             scanf("%d", &numero);
             printf("Digite a posicao (0 para inicio): ");
             scanf("%d", &posicao);
-            lista = inserir_recursivo(lista, numero, posicao);
-            printf("Inserido na posicao (recursivo)!\n\n");
+            LSE* novo = novo_no();
+            if(novo){
+                novo->valor = numero;
+                lista = inserir_recursivo(lista, novo, posicao);
+                printf("Inserido na posicao (recursivo)!\n\n");
+            }
             break;
         }
         case 5:{
@@ -153,94 +169,80 @@ void menu(){
 
 LSE* novo_no(){
     LSE* no = malloc(sizeof(LSE));
+
+    if(no){
+        no->proximo = NULL;
+    }else{
+        printf("Erro de alocacao\n");
+        no = NULL;
+    }
+
     return no;
 }
 
-LSE* inserir_no_inicio(LSE* lista, int valor){
-    LSE* novo = novo_no();
+LSE* inserir_no_inicio(LSE* lista, LSE* novo){
 
-    if (novo){
-        novo->valor = valor;
+    if (novo != NULL){
+        novo->proximo = lista;
+        lista = novo;
+    } 
+    return lista;
+}
+
+LSE* inserir_final(LSE* lista, LSE* novo){
+    if (lista ==  NULL){
+        lista = novo;
+    }else{
+        LSE* aux = lista;
+
+        while (aux->proximo != NULL){
+            aux = aux->proximo;
+        }
+
+        aux->proximo = novo;
+    }
+
+    return lista;
+}
+
+LSE* inserir_posicao(LSE* lista, LSE* novo, int posicao){
+    
+    if(posicao == 0){
         novo->proximo = lista;
         lista = novo;
     }else{
-        printf("Erro de alocacao\n");
-    }
+        LSE* aux = lista;
+        int cont = 0;
 
-    return lista;
-}
+        while(aux != NULL && cont < posicao - 1){
+            aux = aux->proximo;
+            cont++;
+        }
 
-LSE* inserir_final(LSE* lista, int valor){
-    LSE* novo = novo_no();
-    novo->proximo = NULL;
-
-    if(novo){
-        novo->valor = valor;
-
-        if (lista ==  NULL){
-            lista = novo;
-        }else{
-            LSE* aux = lista;
-
-            while (aux->proximo != NULL){
-                aux = aux->proximo;
-            }
-
+        if(aux != NULL){
+            novo->proximo = aux->proximo;
             aux->proximo = novo;
-        }
-    }else{
-        printf("Erro de alocacao\n");
-    }
-
-    return lista;
-}
-
-LSE* inserir_posicao(LSE* lista, int valor, int posicao){
-    LSE* novo = novo_no();
-
-    if (novo){
-        novo->valor = valor;
-
-        if(posicao == 0){
-            novo->proximo = lista;
-            lista = novo;
         }else{
-            LSE* aux = lista;
-            int cont = 0;
-
-            while(aux != NULL && cont < posicao - 1){
-                aux = aux->proximo;
-                cont++;
-            }
-
-            if(aux != NULL){
-                novo->proximo = aux->proximo;
-                aux->proximo = novo;
-            }else{
-                printf("Posicao invalida!\n");
-                free(novo);
-            }
+            printf("Posicao invalida!\n");
+            free(novo);
         }
-    }else{
-        printf("Erro de alocacao\n");
     }
 
     return lista;
 }
 
-LSE* inserir_recursivo(LSE* lista, int valor, int posicao){
+LSE* inserir_recursivo(LSE* lista, LSE* novo, int posicao){
     LSE* result;
 
     if(posicao == 0){
-        LSE* novo = novo_no();
-        novo->valor = valor;
         novo->proximo = lista;
         result = novo;
     }else if(lista == NULL){
         printf("Posicao invalida!\n");
+        free(novo);
         result = lista;
     }else{
-        lista->proximo = inserir_recursivo(lista->proximo, valor, posicao - 1);
+        lista->proximo = inserir_recursivo(lista->proximo, novo, posicao - 1);
         result = lista;
     }
 

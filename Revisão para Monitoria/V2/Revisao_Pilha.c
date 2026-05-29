@@ -40,7 +40,11 @@ int main() {
         case 1:
             printf("\nDigite os numeros para a lista (finalize com 0):\n");
             while (scanf("%d", &num) == 1 && num != 0) {
-                lista = inserir_final_lista(lista, num);
+                LSE* novo = novo_no_lista();
+                if(novo){
+                    novo->info = num;
+                    lista = inserir_final_lista(lista, novo);
+                }
             }
             while(getchar() != '\n');
             printf("\nLista criada com sucesso!\n\n");
@@ -88,11 +92,14 @@ void menu(){
 
 /////////////////////////////FUNÇÕES LISTA/////////////////////////////
 
-LSE* novo_no_lista(int valor){
+LSE* novo_no_lista(){
     LSE* no = malloc(sizeof(LSE));
 
-    no->info = valor;
-    no->proximo = NULL;
+    if(no){
+        no->proximo = NULL;
+    }else{
+        printf("Erro de alocacao\n");
+    }
 
     return no;
 }
@@ -110,9 +117,7 @@ LSE* ultimo_no_lista(LSE* lista){
     return ultimo;
 }
 
-LSE* inserir_final_lista(LSE* lista, int valor){
-    LSE* novo = novo_no_lista(valor);
-
+LSE* inserir_final_lista(LSE* lista, LSE* novo){
     if (lista == NULL){
         lista = novo;
     }else{

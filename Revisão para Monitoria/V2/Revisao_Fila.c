@@ -12,13 +12,13 @@ typedef struct Fila{
 }Fila;
 
 ///////// FUNÇÕES LISTA ////////////
-LSE* novo_no_lista(int valor);
+LSE* novo_no_lista();
 void printar_lista(LSE* lista);
 LSE* liberar_lista(LSE* lista);
 
 ///////// FUNÇÕES FILA ////////////
 Fila* criar_fila();
-Fila* enfileirar(Fila* fila, int valor);
+Fila* enfileirar(Fila* fila, LSE* novo);
 Fila* desenfileirar(Fila* fila);
 void mostrar_fila(Fila* fila);
 Fila* liberar_fila(Fila* fila);
@@ -38,8 +38,12 @@ int main() {
         case 1:{
             printf("\nDigite um numero para enfileirar: ");
             scanf("%d", &num);
-            fila = enfileirar(fila, num);
-            printf("Elemento enfileirado com sucesso!\n\n");
+            LSE* novo = novo_no_lista();
+            if(novo){
+                novo->info = num;
+                fila = enfileirar(fila, novo);
+                printf("Elemento enfileirado com sucesso!\n\n");
+            }
             break;
         }
         case 2:
@@ -80,11 +84,14 @@ void menu(){
 
 /////////////////////////////FUNÇÕES LISTA/////////////////////////////
 
-LSE* novo_no_lista(int valor){
+LSE* novo_no_lista(){
     LSE* no = malloc(sizeof(LSE));
 
-    no->info = valor;
-    no->proximo = NULL;
+    if(no){
+        no->proximo = NULL;
+    }else{
+        printf("Erro de alocacao\n");
+    }
 
     return no;
 }
@@ -128,9 +135,7 @@ Fila* criar_fila(){
     return fila;
 }
 
-Fila* enfileirar(Fila* fila, int valor){
-    LSE* novo = novo_no_lista(valor);
-
+Fila* enfileirar(Fila* fila, LSE* novo){
     if(fila->inicio == NULL){
         fila->inicio = novo;
         fila->fim = novo;
